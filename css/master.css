@@ -11,12 +11,31 @@ body {
   min-height: 100%;
   display: grid;
   grid-template-rows: 1fr auto;
+  background-color: #F2F2F2;
   font-family: Raleway, sans-serif;
 }
 
 a {
   text-decoration: none;
 }
+
+/* Container */
+
+.content {
+  position: relative;
+  background-color: white;
+}
+
+/* Ball */
+
+.ball {
+  position: absolute;
+  /* bottom: 0;
+  left: 0; */
+  background-color: black;
+}
+
+/* Footer */
 
 footer {
   grid-row-start: 2;
