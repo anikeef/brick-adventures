@@ -17,9 +17,8 @@ function GameGUI() {
   container.addEventListener("click", jump);
 
   function jump(e) {
-    console.log(angle(e));
-    const x = Ball.getXofTime(parseInt(ball.style.left), angle(e));
-    const y = Ball.getYofTime(parseInt(ball.style.bottom), angle(e));
+    const x = Ball.getXofTime(parseInt(ball.style.left), getXspeed(e));
+    const y = Ball.getYofTime(parseInt(ball.style.bottom), getYspeed(e));
     let start = performance.now();
     requestAnimationFrame(function animate() {
       let time = performance.now() - start;
@@ -35,14 +34,12 @@ function GameGUI() {
     })
   }
 
-  function angle(e) {
-    let x = e.pageX - parseInt(ball.style.left);
-    let y = (containerHeight - e.pageY) - parseInt(ball.style.bottom);
-    return arcctg(x / y);
+  function getXspeed(e) {
+    return (e.pageX - parseInt(ball.style.left)) * 3;
   }
 
-  function arcctg(x) {
-    return Math.PI / 2 - Math.atan(x);
+  function getYspeed(e) {
+    return (containerHeight - e.pageY - parseInt(ball.style.bottom)) * 3;
   }
 };
 
