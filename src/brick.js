@@ -1,4 +1,4 @@
-export const Ball = (function(x, y) {
+export const Brick = (function(x, y) {
 
   function getXofTime(x0, vx) {
     return function(time) {

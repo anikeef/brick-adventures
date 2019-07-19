@@ -86,15 +86,15 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./src/ball.js":
-/*!*********************!*\
-  !*** ./src/ball.js ***!
-  \*********************/
-/*! exports provided: Ball */
+/***/ "./src/brick.js":
+/*!**********************!*\
+  !*** ./src/brick.js ***!
+  \**********************/
+/*! exports provided: Brick */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Ball\", function() { return Ball; });\nconst Ball = (function(x, y) {\n\n  function getXofTime(x0, vx) {\n    return function(time) {\n      const t = msToSeconds(time);\n      return x0 + vx * t; // px\n    }\n  }\n\n  function getYofTime(x0, vy) {\n    const a = -3000; // px/second^2\n    return function(time) {\n      const t = msToSeconds(time);\n      return x0 + vy * t + a * t**2 / 2; // px\n    }\n  }\n\n  function msToSeconds(ms) {\n    return ms / 1000;\n  }\n\n  return {x, y, getXofTime, getYofTime};\n})();\n\n\n//# sourceURL=webpack:///./src/ball.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Brick\", function() { return Brick; });\nconst Brick = (function(x, y) {\n\n  function getXofTime(x0, vx) {\n    return function(time) {\n      const t = msToSeconds(time);\n      return x0 + vx * t; // px\n    }\n  }\n\n  function getYofTime(x0, vy) {\n    const a = -3000; // px/second^2\n    return function(time) {\n      const t = msToSeconds(time);\n      return x0 + vy * t + a * t**2 / 2; // px\n    }\n  }\n\n  function msToSeconds(ms) {\n    return ms / 1000;\n  }\n\n  return {x, y, getXofTime, getYofTime};\n})();\n\n\n//# sourceURL=webpack:///./src/brick.js?");
 
 /***/ }),
 
@@ -106,7 +106,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _ball_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ball.js */ \"./src/ball.js\");\n\n\n\nfunction GameGUI() {\n  const container = document.querySelector(\".content\");\n  const containerWidth = container.offsetWidth;\n  const containerHeight = container.offsetHeight;\n\n  const ball = document.createElement(\"div\");\n  ball.classList.add(\"ball\");\n  ball.style.width = 50 + \"px\";\n  ball.style.height = 50 + \"px\";\n  ball.style.left = 0;\n  ball.style.bottom = 0;\n  container.appendChild(ball);\n\n  container.addEventListener(\"click\", jump);\n\n  function jump(e) {\n    const x = _ball_js__WEBPACK_IMPORTED_MODULE_0__[\"Ball\"].getXofTime(parseInt(ball.style.left), getXspeed(e));\n    const y = _ball_js__WEBPACK_IMPORTED_MODULE_0__[\"Ball\"].getYofTime(parseInt(ball.style.bottom), getYspeed(e));\n    let start = performance.now();\n    requestAnimationFrame(function animate() {\n      let time = performance.now() - start;\n      // If ball is not underground\n      if (parseInt(ball.style.bottom) >= 0) {\n        ball.style.left = x(time) + \"px\";\n        ball.style.bottom = y(time) + \"px\";\n        requestAnimationFrame(animate);\n      } else {\n        ball.style.left = x(time) + \"px\";\n        ball.style.bottom = 0;\n      }\n    })\n  }\n\n  function getXspeed(e) {\n    return (e.pageX - parseInt(ball.style.left)) * 3;\n  }\n\n  function getYspeed(e) {\n    return (containerHeight - e.pageY - parseInt(ball.style.bottom)) * 3;\n  }\n};\n\nGameGUI();\n\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _brick_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./brick.js */ \"./src/brick.js\");\n\n\n\nfunction GameGUI() {\n  const container = document.querySelector(\".content\");\n  const containerWidth = container.offsetWidth;\n  const containerHeight = container.offsetHeight;\n\n  const brick = document.createElement(\"div\");\n  brick.classList.add(\"brick\");\n  brick.style.width = 50 + \"px\";\n  brick.style.height = 50 + \"px\";\n  brick.style.left = 0;\n  brick.style.bottom = 0;\n  container.appendChild(brick);\n\n  container.addEventListener(\"click\", jump);\n\n  function jump(e) {\n    const x = _brick_js__WEBPACK_IMPORTED_MODULE_0__[\"Brick\"].getXofTime(parseInt(brick.style.left), getXspeed(e));\n    const y = _brick_js__WEBPACK_IMPORTED_MODULE_0__[\"Brick\"].getYofTime(parseInt(brick.style.bottom), getYspeed(e));\n    let start = performance.now();\n    requestAnimationFrame(function animate() {\n      let time = performance.now() - start;\n      // If brick is not underground\n      if (parseInt(brick.style.bottom) >= 0) {\n        brick.style.left = x(time) + \"px\";\n        brick.style.bottom = y(time) + \"px\";\n        requestAnimationFrame(animate);\n      } else {\n        brick.style.left = x(time) + \"px\";\n        brick.style.bottom = 0;\n      }\n    })\n  }\n\n  function getXspeed(e) {\n    return (e.pageX - parseInt(brick.style.left)) * 3;\n  }\n\n  function getYspeed(e) {\n    return (containerHeight - e.pageY - parseInt(brick.style.bottom)) * 3;\n  }\n};\n\nGameGUI();\n\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ })
 
