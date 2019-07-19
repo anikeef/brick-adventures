@@ -1,6 +1,7 @@
-//import Ball from "/ball.js"
+"use strict";
+import Ball from "./ball.js";
 
-(function() {
+function DOMStuff() {
   const container = document.querySelector(".content");
   const width = container.offsetWidth;
   const pxPerMeter = width / 20;
@@ -14,10 +15,10 @@
   container.appendChild(ball);
 
   ball.addEventListener("click", function() {
-    start = performance.now();
+    let start = performance.now();
     requestAnimationFrame(function animate() {
       console.log(parseInt(ball.style.left), parseInt(ball.style.bottom));
-      time = performance.now() - start;
+      let time = performance.now() - start;
       if (parseInt(ball.style.bottom) >= 0) {
         ball.style.left = metersToPx(x(time));
         ball.style.bottom = metersToPx(y(time));
@@ -30,16 +31,16 @@
   })
 
   function x(time) {
-    v = 15;
-    a = 0;
-    t = msToSeconds(time);
+    const v = 15;
+    const a = 0;
+    const t = msToSeconds(time);
     return v * t + a * t * t / 2;;
   }
 
   function y(time) {
-    v = 20;
-    a = -40;
-    t = msToSeconds(time);
+    const v = 20;
+    const a = -40;
+    const t = msToSeconds(time);
     return v * t + a * t * t / 2;
   }
 
@@ -50,4 +51,6 @@
   function msToSeconds(ms) {
     return ms / 1000;
   }
-})();
+};
+
+DOMStuff();
