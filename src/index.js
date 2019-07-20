@@ -10,7 +10,7 @@ function GameGUI() {
   const brickObj = Brick(0, 0, 50, 50);
   const brick = initializeBlock(brickObj, "brick");
 
-  const blockObj = Block(250, 0, 100, 50);
+  const blockObj = Block(250, 300, 50, 50);
   const block = initializeBlock(blockObj, "block");
 
   container.addEventListener("click", jump);
@@ -18,8 +18,8 @@ function GameGUI() {
   function jump(e) {
     if (brickObj.isJumping) return;
     brickObj.isJumping = true;
-    const x = brickObj.getXofTime(brickObj.x, getXspeed(e));
-    const y = brickObj.getYofTime(brickObj.y, getYspeed(e));
+    let x = brickObj.getXofTime(brickObj.x, getXspeed(e));
+    let y = brickObj.getYofTime(brickObj.y, getYspeed(e));
     let start = performance.now();
     requestAnimationFrame(function animate() {
       let time = performance.now() - start;
@@ -31,6 +31,13 @@ function GameGUI() {
       } else if (isBrickOnBlock()) {
         brickObj.isJumping = false;
         brickObj.y = blockObj.y + blockObj.height;
+      } else if (isBrickUnderBlock()) {
+        brickObj.y = blockObj.y - brickObj.height;
+        y = brickObj.getYofTime(brickObj.y, 0);
+        requestAnimationFrame(animate);
+      } else if (isBrickNearBlock()) {
+        x = brickObj.getXofTime(brickObj.x, -getXspeed(e));
+        requestAnimationFrame(animate);
       } else {
         requestAnimationFrame(animate);
       }
@@ -39,7 +46,7 @@ function GameGUI() {
   }
 
   function render() {
-    if (isBrickOnBlock()) console.log(isBrickOnBlock());
+    if (isBrickNearBlock()) console.log(isBrickNearBlock());
     brick.style.left = brickObj.x + "px";
     brick.style.bottom = brickObj.y + "px";
   }
@@ -57,8 +64,25 @@ function GameGUI() {
 
   function isBrickOnBlock() {
     return brickObj.x < (blockObj.x + blockObj.width) &&
-    brickObj.x > (blockObj.x - brickObj.width) &&
-    brickObj.y < (blockObj.y + blockObj.height);
+      brickObj.x > (blockObj.x - brickObj.width) &&
+      brickObj.y <= (blockObj.y + blockObj.height) &&
+      brickObj.y > (blockObj.y + blockObj.height/3);
+  }
+
+  function isBrickUnderBlock() {
+    return brickObj.x < (blockObj.x + blockObj.width) &&
+      brickObj.x > (blockObj.x - brickObj.width) &&
+      (brickObj.y + brickObj.height) >= blockObj.y &&
+      (brickObj.y + brickObj.height) < (blockObj.y + blockObj.height/3);
+  }
+
+  function isBrickNearBlock() {
+    return brickObj.y < (blockObj.y + blockObj.height) &&
+      brickObj.y > (blockObj.y - brickObj.height) &&
+      ((brickObj.x + brickObj.width) >= blockObj.x &&
+       (brickObj.x + brickObj.width) < blockObj.x + blockObj.width/4 ||
+       brickObj.x > (blockObj.x + blockObj.width * 3/4) &&
+       brickObj.x <= (blockObj.x + blockObj.width));
   }
 
   function getXspeed(e) {
