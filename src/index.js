@@ -1,5 +1,6 @@
 "use strict";
 import {Brick} from "./brick.js";
+import {Block} from "./block.js";
 
 function GameGUI() {
   const container = document.querySelector(".content");
@@ -13,6 +14,15 @@ function GameGUI() {
   brick.style.height = brickObj.height + "px";
   container.appendChild(brick);
   render();
+
+  const blockObj = Block(250, 0, 100, 50);
+  const block = document.createElement("div");
+  block.classList.add("block");
+  block.style.width = blockObj.width + "px";
+  block.style.height = blockObj.height + "px";
+  block.style.left = blockObj.x + "px";
+  block.style.bottom = blockObj.y + "px";
+  container.appendChild(block);
 
   container.addEventListener("click", jump);
 
@@ -40,11 +50,11 @@ function GameGUI() {
   }
 
   function getXspeed(e) {
-    return (e.pageX - parseInt(brick.style.left)) * 3;
+    return (e.pageX - brickObj.x) * 3;
   }
 
   function getYspeed(e) {
-    return (containerHeight - e.pageY - parseInt(brick.style.bottom)) * 3;
+    return (containerHeight - e.pageY - brickObj.y) * 3;
   }
 };
 

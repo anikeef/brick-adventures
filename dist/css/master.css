@@ -26,13 +26,16 @@ a {
   background-color: white;
 }
 
-/* Ball */
+/* Brick */
 
 .brick {
   position: absolute;
-  /* bottom: 0;
-  left: 0; */
   background-color: black;
+}
+
+.block {
+  position: absolute;
+  background-color: #F2F2F2;
 }
 
 /* Footer */
