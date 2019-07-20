@@ -13,7 +13,6 @@ function GameGUI() {
   brick.style.width = brickObj.width + "px";
   brick.style.height = brickObj.height + "px";
   container.appendChild(brick);
-  render();
 
   const blockObj = Block(250, 0, 100, 50);
   const block = document.createElement("div");
@@ -24,6 +23,7 @@ function GameGUI() {
   block.style.bottom = blockObj.y + "px";
   container.appendChild(block);
 
+  render();
   container.addEventListener("click", jump);
 
   function jump(e) {
@@ -36,6 +36,8 @@ function GameGUI() {
       brickObj.y = y(time);
       if (brickObj.y < 0) {
         brickObj.y = 0;
+      } else if (isBrickOnBlock()) {
+        brickObj.y = blockObj.y + blockObj.height;
       } else {
         requestAnimationFrame(animate);
       }
@@ -43,15 +45,16 @@ function GameGUI() {
     })
   }
 
-  // function isBrickOnBlock() {
-  //   return (brickObj.x < blockObj.x + blockObj.width &&
-  //   brickObj.x > blockObj.x - brickObj.width &&
-  //   brickObj.y = blockObj.y + blockObj.height)
-  // }
-
   function render() {
+    if (isBrickOnBlock()) console.log(isBrickOnBlock());
     brick.style.left = brickObj.x + "px";
     brick.style.bottom = brickObj.y + "px";
+  }
+
+  function isBrickOnBlock() {
+    return brickObj.x < (blockObj.x + blockObj.width) &&
+    brickObj.x > (blockObj.x - brickObj.width) &&
+    brickObj.y < (blockObj.y + blockObj.height);
   }
 
   function getXspeed(e) {
