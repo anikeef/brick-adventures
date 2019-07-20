@@ -8,22 +8,11 @@ function GameGUI() {
   const containerHeight = container.offsetHeight;
 
   const brickObj = Brick(0, 0, 50, 50);
-  const brick = document.createElement("div");
-  brick.classList.add("brick");
-  brick.style.width = brickObj.width + "px";
-  brick.style.height = brickObj.height + "px";
-  container.appendChild(brick);
+  const brick = initializeBlock(brickObj, "brick");
 
   const blockObj = Block(250, 0, 100, 50);
-  const block = document.createElement("div");
-  block.classList.add("block");
-  block.style.width = blockObj.width + "px";
-  block.style.height = blockObj.height + "px";
-  block.style.left = blockObj.x + "px";
-  block.style.bottom = blockObj.y + "px";
-  container.appendChild(block);
+  const block = initializeBlock(blockObj, "block");
 
-  render();
   container.addEventListener("click", jump);
 
   function jump(e) {
@@ -53,6 +42,17 @@ function GameGUI() {
     if (isBrickOnBlock()) console.log(isBrickOnBlock());
     brick.style.left = brickObj.x + "px";
     brick.style.bottom = brickObj.y + "px";
+  }
+
+  function initializeBlock(blockObj, blockClass) {
+    const block = document.createElement("div");
+    block.classList.add(blockClass);
+    block.style.width = blockObj.width + "px";
+    block.style.height = blockObj.height + "px";
+    block.style.left = blockObj.x + "px";
+    block.style.bottom = blockObj.y + "px";
+    container.appendChild(block);
+    return block;
   }
 
   function isBrickOnBlock() {
