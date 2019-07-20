@@ -27,6 +27,8 @@ function GameGUI() {
   container.addEventListener("click", jump);
 
   function jump(e) {
+    if (brickObj.isJumping) return;
+    brickObj.isJumping = true;
     const x = brickObj.getXofTime(brickObj.x, getXspeed(e));
     const y = brickObj.getYofTime(brickObj.y, getYspeed(e));
     let start = performance.now();
@@ -35,8 +37,10 @@ function GameGUI() {
       brickObj.x = x(time);
       brickObj.y = y(time);
       if (brickObj.y < 0) {
+        brickObj.isJumping = false;
         brickObj.y = 0;
       } else if (isBrickOnBlock()) {
+        brickObj.isJumping = false;
         brickObj.y = blockObj.y + blockObj.height;
       } else {
         requestAnimationFrame(animate);

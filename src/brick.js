@@ -18,5 +18,5 @@ export const Brick = function(x, y, width, height) {
     return ms / 1000;
   }
 
-  return {x, y, width, height, getXofTime, getYofTime};
+  return {x, y, width, height, getXofTime, getYofTime, isJumping: false};
 };
