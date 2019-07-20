@@ -6,6 +6,8 @@ function GameGUI() {
   const containerWidth = container.offsetWidth;
   const containerHeight = container.offsetHeight;
 
+  const brickObj = Brick(0, 0);
+
   const brick = document.createElement("div");
   brick.classList.add("brick");
   brick.style.width = 50 + "px";
@@ -17,21 +19,27 @@ function GameGUI() {
   container.addEventListener("click", jump);
 
   function jump(e) {
-    const x = Brick.getXofTime(parseInt(brick.style.left), getXspeed(e));
-    const y = Brick.getYofTime(parseInt(brick.style.bottom), getYspeed(e));
+    const x = brickObj.getXofTime(brickObj.x, getXspeed(e));
+    const y = brickObj.getYofTime(brickObj.y, getYspeed(e));
     let start = performance.now();
     requestAnimationFrame(function animate() {
       let time = performance.now() - start;
       // If brick is not underground
-      if (parseInt(brick.style.bottom) >= 0) {
-        brick.style.left = x(time) + "px";
-        brick.style.bottom = y(time) + "px";
+      if (brickObj.y >= 0) {
+        brickObj.x = x(time);
+        brickObj.y = y(time);
         requestAnimationFrame(animate);
       } else {
-        brick.style.left = x(time) + "px";
-        brick.style.bottom = 0;
+        brickObj.x = x(time);
+        brickObj.y = 0;
       }
+      render();
     })
+  }
+
+  function render() {
+    brick.style.left = brickObj.x + "px";
+    brick.style.bottom = brickObj.y + "px";
   }
 
   function getXspeed(e) {

@@ -1,4 +1,6 @@
-export const Brick = (function(x, y) {
+export const Brick = function(x, y) {
+  // let vx = 0;
+  // let vy = 0;
 
   function getXofTime(x0, vx) {
     return function(time) {
@@ -15,9 +17,23 @@ export const Brick = (function(x, y) {
     }
   }
 
+  // function updateCoords(dt) {
+  //   a = -3000;
+  //   x += vx * msToSeconds(dt);
+  //   y = y + vy * t + a * t**2 / 2;
+  // }
+  //
+  // function setXvelocity(v) {
+  //   vx = v;
+  // }
+  //
+  // function setYvelocity(v) {
+  //   vy = v;
+  // }
+
   function msToSeconds(ms) {
     return ms / 1000;
   }
 
   return {x, y, getXofTime, getYofTime};
-})();
+};
