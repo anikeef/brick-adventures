@@ -6,15 +6,13 @@ function GameGUI() {
   const containerWidth = container.offsetWidth;
   const containerHeight = container.offsetHeight;
 
-  const brickObj = Brick(0, 0);
-
+  const brickObj = Brick(0, 0, 50, 50);
   const brick = document.createElement("div");
   brick.classList.add("brick");
-  brick.style.width = 50 + "px";
-  brick.style.height = 50 + "px";
-  brick.style.left = 0;
-  brick.style.bottom = 0;
+  brick.style.width = brickObj.width + "px";
+  brick.style.height = brickObj.height + "px";
   container.appendChild(brick);
+  render();
 
   container.addEventListener("click", jump);
 
@@ -24,7 +22,6 @@ function GameGUI() {
     let start = performance.now();
     requestAnimationFrame(function animate() {
       let time = performance.now() - start;
-      // If brick is not underground
       if (brickObj.y >= 0) {
         brickObj.x = x(time);
         brickObj.y = y(time);
