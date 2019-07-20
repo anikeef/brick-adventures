@@ -32,17 +32,22 @@ function GameGUI() {
     let start = performance.now();
     requestAnimationFrame(function animate() {
       let time = performance.now() - start;
-      if (brickObj.y >= 0) {
-        brickObj.x = x(time);
-        brickObj.y = y(time);
-        requestAnimationFrame(animate);
-      } else {
-        brickObj.x = x(time);
+      brickObj.x = x(time);
+      brickObj.y = y(time);
+      if (brickObj.y < 0) {
         brickObj.y = 0;
+      } else {
+        requestAnimationFrame(animate);
       }
       render();
     })
   }
+
+  // function isBrickOnBlock() {
+  //   return (brickObj.x < blockObj.x + blockObj.width &&
+  //   brickObj.x > blockObj.x - brickObj.width &&
+  //   brickObj.y = blockObj.y + blockObj.height)
+  // }
 
   function render() {
     brick.style.left = brickObj.x + "px";
