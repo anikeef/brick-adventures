@@ -17,33 +17,56 @@ function GameGUI() {
 
   function jump(e) {
     if (brickObj.isJumping) return;
-    brickObj.isJumping = true;
-    let x = brickObj.getXofTime(brickObj.x, getXspeed(e));
-    let y = brickObj.getYofTime(brickObj.y, getYspeed(e));
-    let start = performance.now();
-    requestAnimationFrame(function animate() {
-      let time = performance.now() - start;
-      brickObj.x = x(time);
-      brickObj.y = y(time);
-      if (brickObj.y < 0) {
-        brickObj.isJumping = false;
-        brickObj.y = 0;
-      } else if (isBrickOnBlock()) {
-        brickObj.isJumping = false;
-        brickObj.y = blockObj.y + blockObj.height;
-      } else if (isBrickUnderBlock()) {
-        brickObj.y = blockObj.y - brickObj.height;
-        y = brickObj.getYofTime(brickObj.y, 0);
-        requestAnimationFrame(animate);
-      } else if (isBrickNearBlock()) {
-        x = brickObj.getXofTime(brickObj.x, -getXspeed(e));
-        requestAnimationFrame(animate);
-      } else {
-        requestAnimationFrame(animate);
+    brickObj.jump(getXspeed(e), getYspeed(e));
+    const timestep = 1000/60;
+    let dt = 0;
+    let lastFrameTime = performance.now();
+    requestAnimationFrame(function animate(timestamp) {
+      dt += (timestamp - lastFrameTime);
+      lastFrameTime = timestamp;
+      while (dt > timestep) {
+        brickObj.updateCoords(timestep);
+        dt -= timestep;
+        if (brickObj.y <= 0) {
+          brickObj.stopJumping();
+          render();
+          return;
+        }
       }
       render();
+      requestAnimationFrame(animate);
     })
   }
+
+  // function jump(e) {
+  //   if (brickObj.isJumping) return;
+  //   brickObj.isJumping = true;
+  //   let x = brickObj.getXofTime(brickObj.x, getXspeed(e));
+  //   let y = brickObj.getYofTime(brickObj.y, getYspeed(e));
+  //   let start = performance.now();
+  //   requestAnimationFrame(function animate() {
+  //     let time = performance.now() - start;
+  //     brickObj.x = x(time);
+  //     brickObj.y = y(time);
+  //     if (brickObj.y < 0) {
+  //       brickObj.isJumping = false;
+  //       brickObj.y = 0;
+  //     } else if (isBrickOnBlock()) {
+  //       brickObj.isJumping = false;
+  //       brickObj.y = blockObj.y + blockObj.height;
+  //     } else if (isBrickUnderBlock()) {
+  //       brickObj.y = blockObj.y - brickObj.height;
+  //       y = brickObj.getYofTime(brickObj.y, 0);
+  //       requestAnimationFrame(animate);
+  //     } else if (isBrickNearBlock()) {
+  //       x = brickObj.getXofTime(brickObj.x, -getXspeed(e));
+  //       requestAnimationFrame(animate);
+  //     } else {
+  //       requestAnimationFrame(animate);
+  //     }
+  //     render();
+  //   })
+  // }
 
   function render() {
     if (isBrickNearBlock()) console.log(isBrickNearBlock());

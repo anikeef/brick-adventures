@@ -1,4 +1,8 @@
 export const Brick = function(x, y, width, height) {
+  const a = -3000;
+  let vy = 0;
+  let vx = 0;
+
   function getXofTime(x0, vx) {
     return function(time) {
       const t = msToSeconds(time);
@@ -14,9 +18,26 @@ export const Brick = function(x, y, width, height) {
     }
   }
 
+  function jump(xVelocity, yVelocity) {
+    this.isJumping = true;
+    this.vx = xVelocity;
+    this.vy = yVelocity;
+  }
+
+  function stopJumping() {
+    this.isJumping = false;
+    this.y = 0;
+  }
+
+  function updateCoords(dt) {
+    this.x += this.vx * msToSeconds(dt);
+    this.vy += a * msToSeconds(dt);
+    this.y += this.vy * msToSeconds(dt);
+  }
+
   function msToSeconds(ms) {
     return ms / 1000;
   }
 
-  return {x, y, width, height, getXofTime, getYofTime, isJumping: false};
+  return {vx, vy, jump, updateCoords, x, y, width, height, getXofTime, getYofTime, stopJumping, isJumping: false};
 };
