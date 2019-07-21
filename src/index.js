@@ -35,6 +35,9 @@ function GameGUI() {
           brickObj.stopJumping(blockObj.y + blockObj.height);
           render();
           return;
+        } else if (isBrickUnderBlock()) {
+          brickObj.y = blockObj.y - brickObj.height;
+          brickObj.vy = 0;
         }
       }
       render();
@@ -101,7 +104,8 @@ function GameGUI() {
     return brickObj.x < (blockObj.x + blockObj.width) &&
       brickObj.x > (blockObj.x - brickObj.width) &&
       (brickObj.y + brickObj.height) >= blockObj.y &&
-      (brickObj.y + brickObj.height) < (blockObj.y + blockObj.height/3);
+      (brickObj.y + brickObj.height) < (blockObj.y + blockObj.height/3) &&
+      brickObj.vy > 0;
   }
 
   function isBrickNearBlock() {
