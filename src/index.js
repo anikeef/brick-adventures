@@ -28,7 +28,11 @@ function GameGUI() {
         brickObj.updateCoords(timestep);
         dt -= timestep;
         if (brickObj.y <= 0) {
-          brickObj.stopJumping();
+          brickObj.stopJumping(0);
+          render();
+          return;
+        } else if (isBrickOnBlock()) {
+          brickObj.stopJumping(blockObj.y + blockObj.height);
           render();
           return;
         }
@@ -89,7 +93,8 @@ function GameGUI() {
     return brickObj.x < (blockObj.x + blockObj.width) &&
       brickObj.x > (blockObj.x - brickObj.width) &&
       brickObj.y <= (blockObj.y + blockObj.height) &&
-      brickObj.y > (blockObj.y + blockObj.height/3);
+      brickObj.y > (blockObj.y + blockObj.height/3) &&
+      brickObj.vy < 0;
   }
 
   function isBrickUnderBlock() {

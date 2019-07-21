@@ -24,9 +24,9 @@ export const Brick = function(x, y, width, height) {
     this.vy = yVelocity;
   }
 
-  function stopJumping() {
+  function stopJumping(height) {
     this.isJumping = false;
-    this.y = 0;
+    this.y = height;
   }
 
   function updateCoords(dt) {
