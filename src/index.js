@@ -34,6 +34,7 @@ function GameGUI() {
         } else if (isBrickOnBlock()) {
           brickObj.stopJumping(blockObj.y + blockObj.height);
           render();
+          scroll();
           return;
         } else if (isBrickUnderBlock()) {
           brickObj.y = blockObj.y - brickObj.height;
@@ -76,10 +77,30 @@ function GameGUI() {
   // }
 
   function render() {
-    if (isBrickNearBlock()) console.log(isBrickNearBlock());
     brick.style.left = brickObj.x + "px";
     brick.style.bottom = brickObj.y + "px";
   }
+
+  function renderBlock() {
+    block.style.bottom = blockObj.y + "px";
+  }
+
+  function scroll() {
+    requestAnimationFrame(function animateScroll() {
+      blockObj.y -= 5;
+      brickObj.y -= 5;
+
+      if (blockObj.y >= 0) {
+        requestAnimationFrame(animateScroll);
+      } else {
+        blockObj.y = 0;
+        brickObj.y = blockObj.height;
+      }
+      render();
+      renderBlock();
+    })
+  }
+  //scroll();
 
   function initializeBlock(blockObj, blockClass) {
     const block = document.createElement("div");
@@ -108,14 +129,14 @@ function GameGUI() {
       brickObj.vy > 0;
   }
 
-  function isBrickNearBlock() {
-    return brickObj.y < (blockObj.y + blockObj.height) &&
-      brickObj.y > (blockObj.y - brickObj.height) &&
-      ((brickObj.x + brickObj.width) >= blockObj.x &&
-       (brickObj.x + brickObj.width) < blockObj.x + blockObj.width/4 ||
-       brickObj.x > (blockObj.x + blockObj.width * 3/4) &&
-       brickObj.x <= (blockObj.x + blockObj.width));
-  }
+  // function isBrickNearBlock() {
+  //   return brickObj.y < (blockObj.y + blockObj.height) &&
+  //     brickObj.y > (blockObj.y - brickObj.height) &&
+  //     ((brickObj.x + brickObj.width) >= blockObj.x &&
+  //      (brickObj.x + brickObj.width) < blockObj.x + blockObj.width/4 ||
+  //      brickObj.x > (blockObj.x + blockObj.width * 3/4) &&
+  //      brickObj.x <= (blockObj.x + blockObj.width));
+  // }
 
   function getXspeed(e) {
     return (e.pageX - brickObj.x) * 3;
