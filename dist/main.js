@@ -86,27 +86,15 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./src/block.js":
-/*!**********************!*\
-  !*** ./src/block.js ***!
-  \**********************/
-/*! exports provided: Block */
+/***/ "./src/game-loop.js":
+/*!**************************!*\
+  !*** ./src/game-loop.js ***!
+  \**************************/
+/*! exports provided: GameLoop */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Block\", function() { return Block; });\nconst Block = function(x, y, width, height) {\n  let vy = 5;\n\n  function updateCoords() {\n    this.y += this.vy * msToSeconds(dt);\n  }\n\n\n  return {x, y, vy, width, height};\n}\n\n\n//# sourceURL=webpack:///./src/block.js?");
-
-/***/ }),
-
-/***/ "./src/brick.js":
-/*!**********************!*\
-  !*** ./src/brick.js ***!
-  \**********************/
-/*! exports provided: Brick */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Brick\", function() { return Brick; });\nconst Brick = function(x, y, width, height) {\n  const a = -3000;\n  let vy = 0;\n  let vx = 0;\n\n  function getXofTime(x0, vx) {\n    return function(time) {\n      const t = msToSeconds(time);\n      return x0 + vx * t; // px\n    }\n  }\n\n  function getYofTime(x0, vy) {\n    const a = -3000; // px/second^2\n    return function(time) {\n      const t = msToSeconds(time);\n      return x0 + vy * t + a * t**2 / 2; // px\n    }\n  }\n\n  function jump(xVelocity, yVelocity) {\n    this.isJumping = true;\n    this.vx = xVelocity;\n    this.vy = yVelocity;\n  }\n\n  function stopJumping(height) {\n    this.isJumping = false;\n    this.y = height;\n  }\n\n  function updateCoords(dt) {\n    this.x += this.vx * msToSeconds(dt);\n    this.vy += a * msToSeconds(dt);\n    this.y += this.vy * msToSeconds(dt);\n  }\n\n  function msToSeconds(ms) {\n    return ms / 1000;\n  }\n\n  return {vx, vy, jump, updateCoords, x, y, width, height, getXofTime, getYofTime, stopJumping, isJumping: false};\n};\n\n\n//# sourceURL=webpack:///./src/brick.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"GameLoop\", function() { return GameLoop; });\n\n\nfunction GameLoop(renderer) {\n  let animationFrameId = null;\n\n  function start() {\n    animationFrameId = requestAnimationFrame(function animate() {\n      renderer.render();\n      animationFrameId = requestAnimationFrame(animate);\n    })\n  }\n\n  function stop() {\n    if (animationFrameId) {\n      cancelAnimationFrame(animationFrameId);\n    }\n  }\n\n  return { start, stop };\n}\n\n\n//# sourceURL=webpack:///./src/game-loop.js?");
 
 /***/ }),
 
@@ -118,7 +106,19 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _brick_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./brick.js */ \"./src/brick.js\");\n/* harmony import */ var _block_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./block.js */ \"./src/block.js\");\n\n\n\n\nfunction GameGUI() {\n  const container = document.querySelector(\".content\");\n  const containerWidth = container.offsetWidth;\n  const containerHeight = container.offsetHeight;\n\n  const brickObj = Object(_brick_js__WEBPACK_IMPORTED_MODULE_0__[\"Brick\"])(0, 0, 50, 50);\n  const brick = initializeBlock(brickObj, \"brick\");\n\n  const blockObj = Object(_block_js__WEBPACK_IMPORTED_MODULE_1__[\"Block\"])(250, 300, 50, 50);\n  const block = initializeBlock(blockObj, \"block\");\n\n  container.addEventListener(\"click\", jump);\n\n  function jump(e) {\n    if (brickObj.isJumping) return;\n    brickObj.jump(getXspeed(e), getYspeed(e));\n    const timestep = 1000/60;\n    let dt = 0;\n    let lastFrameTime = performance.now();\n    requestAnimationFrame(function animate(timestamp) {\n      dt += (timestamp - lastFrameTime);\n      lastFrameTime = timestamp;\n      while (dt > timestep) {\n        brickObj.updateCoords(timestep);\n        dt -= timestep;\n        if (brickObj.y <= 0) {\n          brickObj.stopJumping(0);\n          render();\n          return;\n        } else if (isBrickOnBlock()) {\n          brickObj.stopJumping(blockObj.y + blockObj.height);\n          render();\n          scroll();\n          return;\n        } else if (isBrickUnderBlock()) {\n          brickObj.y = blockObj.y - brickObj.height;\n          brickObj.vy = 0;\n        }\n      }\n      render();\n      requestAnimationFrame(animate);\n    })\n  }\n\n  // function jump(e) {\n  //   if (brickObj.isJumping) return;\n  //   brickObj.isJumping = true;\n  //   let x = brickObj.getXofTime(brickObj.x, getXspeed(e));\n  //   let y = brickObj.getYofTime(brickObj.y, getYspeed(e));\n  //   let start = performance.now();\n  //   requestAnimationFrame(function animate() {\n  //     let time = performance.now() - start;\n  //     brickObj.x = x(time);\n  //     brickObj.y = y(time);\n  //     if (brickObj.y < 0) {\n  //       brickObj.isJumping = false;\n  //       brickObj.y = 0;\n  //     } else if (isBrickOnBlock()) {\n  //       brickObj.isJumping = false;\n  //       brickObj.y = blockObj.y + blockObj.height;\n  //     } else if (isBrickUnderBlock()) {\n  //       brickObj.y = blockObj.y - brickObj.height;\n  //       y = brickObj.getYofTime(brickObj.y, 0);\n  //       requestAnimationFrame(animate);\n  //     } else if (isBrickNearBlock()) {\n  //       x = brickObj.getXofTime(brickObj.x, -getXspeed(e));\n  //       requestAnimationFrame(animate);\n  //     } else {\n  //       requestAnimationFrame(animate);\n  //     }\n  //     render();\n  //   })\n  // }\n\n  function render() {\n    brick.style.left = brickObj.x + \"px\";\n    brick.style.bottom = brickObj.y + \"px\";\n  }\n\n  function renderBlock() {\n    block.style.bottom = blockObj.y + \"px\";\n  }\n\n  function scroll() {\n    requestAnimationFrame(function animateScroll() {\n      blockObj.y -= 5;\n      brickObj.y -= 5;\n\n      if (blockObj.y >= 0) {\n        requestAnimationFrame(animateScroll);\n      } else {\n        blockObj.y = 0;\n        brickObj.y = blockObj.height;\n      }\n      render();\n      renderBlock();\n    })\n  }\n  //scroll();\n\n  function initializeBlock(blockObj, blockClass) {\n    const block = document.createElement(\"div\");\n    block.classList.add(blockClass);\n    block.style.width = blockObj.width + \"px\";\n    block.style.height = blockObj.height + \"px\";\n    block.style.left = blockObj.x + \"px\";\n    block.style.bottom = blockObj.y + \"px\";\n    container.appendChild(block);\n    return block;\n  }\n\n  function isBrickOnBlock() {\n    return brickObj.x < (blockObj.x + blockObj.width) &&\n      brickObj.x > (blockObj.x - brickObj.width) &&\n      brickObj.y <= (blockObj.y + blockObj.height) &&\n      brickObj.y > (blockObj.y + blockObj.height/3) &&\n      brickObj.vy < 0;\n  }\n\n  function isBrickUnderBlock() {\n    return brickObj.x < (blockObj.x + blockObj.width) &&\n      brickObj.x > (blockObj.x - brickObj.width) &&\n      (brickObj.y + brickObj.height) >= blockObj.y &&\n      (brickObj.y + brickObj.height) < (blockObj.y + blockObj.height/3) &&\n      brickObj.vy > 0;\n  }\n\n  // function isBrickNearBlock() {\n  //   return brickObj.y < (blockObj.y + blockObj.height) &&\n  //     brickObj.y > (blockObj.y - brickObj.height) &&\n  //     ((brickObj.x + brickObj.width) >= blockObj.x &&\n  //      (brickObj.x + brickObj.width) < blockObj.x + blockObj.width/4 ||\n  //      brickObj.x > (blockObj.x + blockObj.width * 3/4) &&\n  //      brickObj.x <= (blockObj.x + blockObj.width));\n  // }\n\n  function getXspeed(e) {\n    return (e.pageX - brickObj.x) * 3;\n  }\n\n  function getYspeed(e) {\n    return (containerHeight - e.pageY - brickObj.y) * 3;\n  }\n};\n\nGameGUI();\n\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _renderer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderer */ \"./src/renderer.js\");\n/* harmony import */ var _game_loop__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./game-loop */ \"./src/game-loop.js\");\n\n\n\nconst game = Object(_game_loop__WEBPACK_IMPORTED_MODULE_1__[\"GameLoop\"])(Object(_renderer__WEBPACK_IMPORTED_MODULE_0__[\"Renderer\"])());\ngame.start();\nsetTimeout(() => {\n  game.stop();\n}, 2000);\n\n//# sourceURL=webpack:///./src/index.js?");
+
+/***/ }),
+
+/***/ "./src/renderer.js":
+/*!*************************!*\
+  !*** ./src/renderer.js ***!
+  \*************************/
+/*! exports provided: Renderer */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Renderer\", function() { return Renderer; });\nfunction Renderer() {\n  function render() {\n    console.log(\"render\");\n  }\n\n  return { render };\n}\n\n//# sourceURL=webpack:///./src/renderer.js?");
 
 /***/ })
 
