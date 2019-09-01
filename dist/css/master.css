@@ -1,6 +1,7 @@
 * {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
 }
 
 html {
@@ -27,16 +28,8 @@ a {
   background-color: white;
 }
 
-/* Brick */
-
-.brick {
-  position: absolute;
-  background-color: black;
-}
-
-.block {
-  position: absolute;
-  background-color: #D2D2D2;
+canvas {
+  vertical-align: bottom;
 }
 
 /* Footer */
