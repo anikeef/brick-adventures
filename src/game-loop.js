@@ -2,7 +2,7 @@
 
 import { config } from "./config";
 
-export function GameLoop(renderer, game) {
+export function GameLoop(renderer, frameActionsBag) {
   let animationFrameId = null;
 
   function start() {
@@ -13,9 +13,7 @@ export function GameLoop(renderer, game) {
       lastFrameTime = timestamp;
       while (dt > config.msPerFrame) {
         dt -= config.msPerFrame;
-        for (let key in game.drawFunctions) {
-          game.drawFunctions[key]();
-        }
+        frameActionsBag.executeAll();
       }
       renderer.render();
       animationFrameId = requestAnimationFrame(animate);

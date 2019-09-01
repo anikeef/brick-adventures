@@ -2510,6 +2510,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 
 /***/ }),
 
+/***/ "./src/frame-actions-bag.js":
+/*!**********************************!*\
+  !*** ./src/frame-actions-bag.js ***!
+  \**********************************/
+/*! exports provided: FrameActionsBag */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"FrameActionsBag\", function() { return FrameActionsBag; });\nfunction FrameActionsBag() {\n  let actions = {};\n\n  function add(name, callback) {\n    actions[name] = callback;\n  }\n\n  function remove(name) {\n    delete actions[name];\n  }\n\n  function executeAll() {\n    for (let name in actions) {\n      actions[name]();\n    }\n  }\n\n  return { add, remove, executeAll };\n}\n\n//# sourceURL=webpack:///./src/frame-actions-bag.js?");
+
+/***/ }),
+
 /***/ "./src/game-loop.js":
 /*!**************************!*\
   !*** ./src/game-loop.js ***!
@@ -2518,7 +2530,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"GameLoop\", function() { return GameLoop; });\n/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./config */ \"./src/config.js\");\n\n\n\n\nfunction GameLoop(renderer, game) {\n  let animationFrameId = null;\n\n  function start() {\n    let lastFrameTime = performance.now();\n    let dt = 0;\n    animationFrameId = requestAnimationFrame(function animate(timestamp) {\n      dt += timestamp - lastFrameTime;\n      lastFrameTime = timestamp;\n      while (dt > _config__WEBPACK_IMPORTED_MODULE_0__[\"config\"].msPerFrame) {\n        dt -= _config__WEBPACK_IMPORTED_MODULE_0__[\"config\"].msPerFrame;\n        for (let key in game.drawFunctions) {\n          game.drawFunctions[key]();\n        }\n      }\n      renderer.render();\n      animationFrameId = requestAnimationFrame(animate);\n    })\n  }\n\n  function stop() {\n    if (animationFrameId) {\n      cancelAnimationFrame(animationFrameId);\n    }\n  }\n\n  return { start, stop };\n}\n\n\n//# sourceURL=webpack:///./src/game-loop.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"GameLoop\", function() { return GameLoop; });\n/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./config */ \"./src/config.js\");\n\n\n\n\nfunction GameLoop(renderer, frameActionsBag) {\n  let animationFrameId = null;\n\n  function start() {\n    let lastFrameTime = performance.now();\n    let dt = 0;\n    animationFrameId = requestAnimationFrame(function animate(timestamp) {\n      dt += timestamp - lastFrameTime;\n      lastFrameTime = timestamp;\n      while (dt > _config__WEBPACK_IMPORTED_MODULE_0__[\"config\"].msPerFrame) {\n        dt -= _config__WEBPACK_IMPORTED_MODULE_0__[\"config\"].msPerFrame;\n        frameActionsBag.executeAll();\n      }\n      renderer.render();\n      animationFrameId = requestAnimationFrame(animate);\n    })\n  }\n\n  function stop() {\n    if (animationFrameId) {\n      cancelAnimationFrame(animationFrameId);\n    }\n  }\n\n  return { start, stop };\n}\n\n\n//# sourceURL=webpack:///./src/game-loop.js?");
 
 /***/ }),
 
@@ -2530,7 +2542,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Game\", function() { return Game; });\n/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! rxjs */ \"./node_modules/rxjs/_esm5/index.js\");\n/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs/operators */ \"./node_modules/rxjs/_esm5/operators/index.js\");\n/* harmony import */ var _brick__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./brick */ \"./src/brick.js\");\n/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./config */ \"./src/config.js\");\n\n\n\n\n\nfunction Game({ brick, blocks }) {\n  let drawFunctions = {};\n\n  function jump(event) {\n    this.canJump = false;\n    this.brick.vx = event.vx;\n    this.brick.vy = event.vy;\n    this.drawFunctions.jump = () => {\n      update(this.brick, _config__WEBPACK_IMPORTED_MODULE_3__[\"config\"].msPerFrame);\n      if (this.brick.y <= 0) {\n        this.brick.y = 0;\n        this.brick.vx = 0;\n        this.brick.vy = 0;\n        this.canJump = true;\n        delete this.drawFunctions.jump;\n      }\n    }\n  }\n\n  function update(object, dt) {\n    object.x += object.vx * msToSeconds(dt);\n    object.vy += _config__WEBPACK_IMPORTED_MODULE_3__[\"config\"].groundAcceleration * msToSeconds(dt);\n    object.y += object.vy * msToSeconds(dt);\n  }\n\n  function msToSeconds(ms) {\n    return ms / 1000;\n  }\n\n  return { jump, brick, canJump: true, drawFunctions };\n}\n\n//# sourceURL=webpack:///./src/game.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Game\", function() { return Game; });\n/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./config */ \"./src/config.js\");\n\n\nfunction Game({ brick, blocks, frameActionsBag }) {\n  function jump(event) {\n    this.canJump = false;\n    this.brick.vx = event.vx;\n    this.brick.vy = event.vy;\n    frameActionsBag.add('jump', (() => {\n      update(this.brick, _config__WEBPACK_IMPORTED_MODULE_0__[\"config\"].msPerFrame);\n      if (this.brick.y <= 0) {\n        this.brick.y = 0;\n        this.brick.vx = 0;\n        this.brick.vy = 0;\n        this.canJump = true;\n        frameActionsBag.remove('jump');\n      }\n    }).bind(this));\n  }\n\n  function update(object, dt) {\n    object.x += object.vx * msToSeconds(dt);\n    object.vy += _config__WEBPACK_IMPORTED_MODULE_0__[\"config\"].groundAcceleration * msToSeconds(dt);\n    object.y += object.vy * msToSeconds(dt);\n  }\n\n  function msToSeconds(ms) {\n    return ms / 1000;\n  }\n\n  return { jump, brick, blocks, canJump: true };\n}\n\n//# sourceURL=webpack:///./src/game.js?");
 
 /***/ }),
 
@@ -2542,7 +2554,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _renderer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderer */ \"./src/renderer.js\");\n/* harmony import */ var _game_loop__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./game-loop */ \"./src/game-loop.js\");\n/* harmony import */ var _game__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./game */ \"./src/game.js\");\n/* harmony import */ var _brick__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./brick */ \"./src/brick.js\");\n\n\n\n\n\nconst game = Object(_game__WEBPACK_IMPORTED_MODULE_2__[\"Game\"])({\n  brick: Object(_brick__WEBPACK_IMPORTED_MODULE_3__[\"Brick\"])(0, 0, 50, 50)\n});\nconst renderer = Object(_renderer__WEBPACK_IMPORTED_MODULE_0__[\"Renderer\"])(game);\nconst gameLoop = Object(_game_loop__WEBPACK_IMPORTED_MODULE_1__[\"GameLoop\"])(renderer, game);\n\ngameLoop.start();\n// setTimeout(() => {\n//   gameLoop.stop();\n// }, 2000);\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _renderer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderer */ \"./src/renderer.js\");\n/* harmony import */ var _game_loop__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./game-loop */ \"./src/game-loop.js\");\n/* harmony import */ var _game__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./game */ \"./src/game.js\");\n/* harmony import */ var _brick__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./brick */ \"./src/brick.js\");\n/* harmony import */ var _frame_actions_bag__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./frame-actions-bag */ \"./src/frame-actions-bag.js\");\n\n\n\n\n\n\nconst frameActionsBag = Object(_frame_actions_bag__WEBPACK_IMPORTED_MODULE_4__[\"FrameActionsBag\"])();\nconst game = Object(_game__WEBPACK_IMPORTED_MODULE_2__[\"Game\"])({\n  brick: Object(_brick__WEBPACK_IMPORTED_MODULE_3__[\"Brick\"])(0, 0, 50, 50),\n  frameActionsBag: frameActionsBag\n});\nconst renderer = Object(_renderer__WEBPACK_IMPORTED_MODULE_0__[\"Renderer\"])(game);\nconst gameLoop = Object(_game_loop__WEBPACK_IMPORTED_MODULE_1__[\"GameLoop\"])(renderer, frameActionsBag);\n\ngameLoop.start();\n// setTimeout(() => {\n//   gameLoop.stop();\n// }, 2000);\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ }),
 

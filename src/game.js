@@ -1,25 +1,20 @@
-import { fromEvent, interval } from 'rxjs';
-import { takeWhile, finalize } from 'rxjs/operators';
-import { Brick } from './brick';
 import { config } from './config'
 
-export function Game({ brick, blocks }) {
-  let drawFunctions = {};
-
+export function Game({ brick, blocks, frameActionsBag }) {
   function jump(event) {
     this.canJump = false;
     this.brick.vx = event.vx;
     this.brick.vy = event.vy;
-    this.drawFunctions.jump = () => {
+    frameActionsBag.add('jump', (() => {
       update(this.brick, config.msPerFrame);
       if (this.brick.y <= 0) {
         this.brick.y = 0;
         this.brick.vx = 0;
         this.brick.vy = 0;
         this.canJump = true;
-        delete this.drawFunctions.jump;
+        frameActionsBag.remove('jump');
       }
-    }
+    }).bind(this));
   }
 
   function update(object, dt) {
@@ -32,5 +27,5 @@ export function Game({ brick, blocks }) {
     return ms / 1000;
   }
 
-  return { jump, brick, canJump: true, drawFunctions };
+  return { jump, brick, blocks, canJump: true };
 }
