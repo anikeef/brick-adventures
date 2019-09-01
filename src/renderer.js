@@ -10,12 +10,11 @@ export function Renderer(game) {
       filter(() => game.canJump),
       map((event) => {
         return {
-          xSpeed: event.pageX - game.brick.x,
-          ySpeed: containerHeight - event.pageY - game.brick.y
+          vx: (event.pageX - game.brick.x) * 3,
+          vy: (containerHeight - event.pageY - game.brick.y) * 3
         }
       })
     );
-  let jumpListener = null;
 
   jumpTrigger$.subscribe((event) => {
     game.jump(event);
