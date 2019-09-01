@@ -4,7 +4,8 @@ import { map, filter } from 'rxjs/operators';
 export function Renderer(game) {
   const container = document.querySelector('.gamebox');
   const containerHeight = container.offsetHeight;
-  const brick = initializeBrick();
+  const brick = initializeElement(game.brick, 'brick');
+  const blocks = game.blocks.map((model) => initializeElement(model, 'block'));
   const jumpTrigger$ = fromEvent(container, 'click')
     .pipe(
       filter(() => game.canJump),
@@ -20,15 +21,15 @@ export function Renderer(game) {
     game.jump(event);
   })
 
-  function initializeBrick() {
-    let brick = document.createElement('div');
-    brick.classList.add('brick');
-    brick.style.width = game.brick.width + 'px';
-    brick.style.height = game.brick.height + 'px';
-    brick.style.bottom = game.brick.y + 'px';
-    brick.style.left = game.brick.x + 'px';
-    container.appendChild(brick);
-    return brick;
+  function initializeElement(model, type) {
+    let element = document.createElement('div');
+    element.classList.add(type);
+    element.style.width = model.width + 'px';
+    element.style.height = model.height + 'px';
+    element.style.bottom = model.y + 'px';
+    element.style.left = model.x + 'px';
+    container.appendChild(element);
+    return element;
   }
 
   function render() {

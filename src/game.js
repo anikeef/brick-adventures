@@ -1,6 +1,6 @@
 import { config } from './config'
 
-export function Game({ brick, blocks, frameActionsBag }) {
+export function Game({ brick, blocks = [], frameActionsBag }) {
   function jump(event) {
     this.canJump = false;
     this.brick.vx = event.vx;
