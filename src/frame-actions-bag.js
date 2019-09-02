@@ -15,5 +15,9 @@ export function FrameActionsBag() {
     }
   }
 
-  return { add, remove, executeAll };
+  function clear() {
+    actions = {};
+  }
+
+  return { add, remove, executeAll, clear };
 }

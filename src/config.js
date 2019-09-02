@@ -3,5 +3,7 @@ export let config = {
   groundAcceleration: -3000,
   blockWidth: 50,
   blockHeight: 50,
-  newBlockStep: 200
+  newBlockStep: 200,
+  scrollVelocity: 300,
+  canvasWidth: 720
 };

@@ -7,7 +7,6 @@ import { Block } from './block';
 
 const frameActionsBag = FrameActionsBag();
 const game = Game({
-  brick: Brick(0, 0, 50, 50),
   frameActionsBag: frameActionsBag
 });
 const renderer = Renderer(game);
