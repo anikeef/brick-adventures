@@ -4,11 +4,14 @@ import { config } from "./config";
 
 export function GameLoop(renderer, frameActionsBag) {
   let animationFrameId = null;
+  let isStopped = true;
 
   function start() {
+    isStopped = false;
     let lastFrameTime = performance.now();
     let dt = 0;
     animationFrameId = requestAnimationFrame(function animate(timestamp) {
+      if (isStopped) return;
       dt += timestamp - lastFrameTime;
       lastFrameTime = timestamp;
       while (dt > config.msPerFrame) {
@@ -22,6 +25,7 @@ export function GameLoop(renderer, frameActionsBag) {
 
   function stop() {
     if (animationFrameId) {
+      isStopped = true;
       cancelAnimationFrame(animationFrameId);
     }
   }

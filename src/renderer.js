@@ -1,6 +1,7 @@
 import { fromEvent } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { config } from './config';
+import { EventPubliser } from './event-publisher';
 
 export function Renderer(game) {
   const container = document.querySelector('.gamebox');

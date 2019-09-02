@@ -2,7 +2,7 @@ import { config } from './config'
 import { Block } from './block';
 import { Brick } from './brick';
 
-export function Game({ frameActionsBag, activeWidth = 720, activeHeight = 1080 }) {
+export function Game({ frameActionsBag, activeWidth = 720, activeHeight = 1080, eventPublisher }) {
   const brick = Brick(0, config.blockHeight, config.blockWidth, config.blockHeight);
   const blocks = [Block(0, 0, activeWidth, config.blockHeight)];
   for (let i = 1; i * config.newBlockStep < activeHeight; i++) {
@@ -56,9 +56,9 @@ export function Game({ frameActionsBag, activeWidth = 720, activeHeight = 1080 }
   }
 
   function gameover() {
-    console.log(this.score);
     frameActionsBag.clear();
     this.isOver = true;
+    eventPublisher.emitGameover();
   }
 
   function update(object, dt) {

@@ -4,15 +4,19 @@ import { Game } from './game';
 import { Brick } from './brick';
 import { FrameActionsBag } from './frame-actions-bag';
 import { Block } from './block';
+import { EventPubliser } from './event-publisher';
 
 const frameActionsBag = FrameActionsBag();
 const game = Game({
-  frameActionsBag: frameActionsBag
+  frameActionsBag: frameActionsBag,
+  eventPublisher: EventPubliser
 });
 const renderer = Renderer(game);
 const gameLoop = GameLoop(renderer, frameActionsBag);
 
 gameLoop.start();
-// setTimeout(() => {
-//   gameLoop.stop();
-// }, 2000);
+EventPubliser.gameover$.subscribe(
+  () => {
+    gameLoop.stop();
+  }
+)
