@@ -16,6 +16,14 @@ export function Game({ brick, blocks = [], frameActionsBag, activeWidth = 720 })
         this.brick.vy = 0;
         this.canJump = true;
         frameActionsBag.remove('jump');
+      } else if (isBrickUnderBlock.call(this)) {
+        this.brick.vy = 0;
+      } else if (this.currentBlock = getCurrentBlock.call(this)) {
+        this.brick.y = this.currentBlock.y + this.currentBlock.height;
+        this.brick.vx = 0;
+        this.brick.vy = 0;
+        this.canJump = true;
+        frameActionsBag.remove('jump');
       }
     }).bind(this));
   }
@@ -36,6 +44,26 @@ export function Game({ brick, blocks = [], frameActionsBag, activeWidth = 720 })
         config.blockHeight
       )
     );
+  }
+
+  function getCurrentBlock() {
+    return this.blocks.find((block) => {
+      return this.brick.x < (block.x + block.width) &&
+      this.brick.x > (block.x - this.brick.width) &&
+      this.brick.y <= (block.y + block.height) &&
+      this.brick.y > (block.y + block.height/3) &&
+      this.brick.vy < 0;
+    })
+  }
+
+  function isBrickUnderBlock() {
+    return this.blocks.some((block) => {
+      return this.brick.x < (block.x + block.width) &&
+      this.brick.x > (block.x - this.brick.width) &&
+      (this.brick.y + this.brick.height) >= block.y &&
+      (this.brick.y + this.brick.height) < (block.y + block.height/3) &&
+      this.brick.vy > 0;
+    })
   }
 
   function msToSeconds(ms) {
@@ -61,5 +89,5 @@ export function Game({ brick, blocks = [], frameActionsBag, activeWidth = 720 })
     return Math.floor(Math.random() * (max - min) ) + min;
   }
 
-  return { jump, brick, blocks, canJump: true, activeWidth, score: 0 };
+  return { jump, brick, blocks, canJump: true, activeWidth, score: 0, currentBlock: undefined };
 }
