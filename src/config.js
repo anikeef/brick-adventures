@@ -5,5 +5,5 @@ export let config = {
   blockHeight: 50,
   newBlockStep: 200,
   scrollVelocity: 300,
-  canvasWidth: 720
+  activeWidth: 720
 };
