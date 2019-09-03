@@ -102,7 +102,7 @@ export function Game({ frameActionsBag }) {
       return this.brick.x < (block.x + block.width) &&
       this.brick.x > (block.x - this.brick.width) &&
       (this.brick.y + this.brick.height) >= block.y &&
-      (this.brick.y + this.brick.height) < (block.y + block.height/3) &&
+      (this.brick.y + this.brick.height) < (block.y + block.height/2) &&
       this.brick.vy > 0;
     })
   }
