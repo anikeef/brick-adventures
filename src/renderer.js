@@ -1,18 +1,33 @@
 import { fromEvent } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { config } from './config';
-import { EventPubliser } from './event-publisher';
+import { EventPublisher } from './event-publisher';
 
 export function Renderer(game) {
   const container = document.querySelector('.gamebox');
   const containerHeight = container.offsetHeight;
 
   const canvas = document.querySelector('canvas');
+  const ctx = canvas.getContext('2d');
   canvas.width = container.offsetWidth;
   canvas.height = container.offsetHeight;
-  const ctx = canvas.getContext('2d');
   ctx.transform(1, 0, 0, -1, 0, canvas.height);
 
+  const home = {
+    element: document.querySelector('.home'),
+    show: function() {
+      this.element.classList.add('home-active')
+    },
+    hide: function() {
+      this.element.classList.remove('home-active');
+    },
+    score: {
+      element: document.querySelector('.home-score'),
+    },
+    message: {
+      element: document.querySelector('.home-message'),
+    }
+  }
   const score = document.querySelector('.game-score');
 
   const jumpTrigger$ = fromEvent(container, 'click')
@@ -31,9 +46,6 @@ export function Renderer(game) {
   })
 
   function render() {
-    if (game.isOver) {
-      gameover();
-    }
     score.textContent = game.score
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'black';
@@ -45,16 +57,19 @@ export function Renderer(game) {
     })
   }
 
+  function initialize() {
+    home.hide();
+  }
+
   function gameover() {
-    const gameoverWindow = document.querySelector('.gameover');
-    const gameoverScore = document.querySelector('.gameover-score');
-    gameoverScore.textContent = game.score;
-    gameoverWindow.classList.add('gameover-active');
+    home.message.element.textContent = 'Game over';
+    home.score.element.textContent = `Current score: ${game.score}`;
+    home.show();
   }
 
   function getCenteredPosition(x) {
     return x + (canvas.width - config.activeWidth) / 2;
   }
 
-  return { render };
+  return { render, gameover, initialize };
 }

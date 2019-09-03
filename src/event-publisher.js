@@ -1,12 +1,14 @@
-import { Subject } from "rxjs";
+import { Subject, fromEvent } from "rxjs";
 
-export const EventPubliser = (function() {
+export const EventPublisher = (function() {
   const gameover = new Subject();
   const gameover$ = gameover.asObservable();
+
+  const play$ = fromEvent(document.querySelector('.play-button'), 'click');
 
   function emitGameover() {
     gameover.next();
   }
 
-  return { emitGameover, gameover$ }
+  return { emitGameover, gameover$, play$ };
 })();

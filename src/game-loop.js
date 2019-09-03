@@ -10,6 +10,7 @@ export function GameLoop(renderer, frameActionsBag) {
     isStopped = false;
     let lastFrameTime = performance.now();
     let dt = 0;
+    renderer.initialize();
     animationFrameId = requestAnimationFrame(function animate(timestamp) {
       if (isStopped) return;
       dt += timestamp - lastFrameTime;
