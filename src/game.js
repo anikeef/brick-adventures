@@ -2,11 +2,12 @@ import { config } from './config'
 import { Block } from './block';
 import { Brick } from './brick';
 import { LocalStorage } from './local-storage';
+import { EventPublisher } from './event-publisher';
 
-export function Game({ frameActionsBag, activeWidth = 720, activeHeight = 1080, eventPublisher }) {
-  const brick = Brick(0, config.blockHeight, config.blockWidth, config.blockHeight);
-  const blocks = [Block(0, 0, activeWidth, config.blockHeight)];
-  for (let i = 1; i * config.newBlockStep < activeHeight; i++) {
+export function Game({ frameActionsBag }) {
+  const brick = Brick(0, config.block.height, config.block.width, config.block.height);
+  const blocks = [Block(0, 0, config.canvas.activeWidth, config.block.height)];
+  for (let i = 1; i * config.horizontalDistanceBetweenBlocks < config.canvas.activeHeight; i++) {
     blocks.push(generateBlock());
   }
 
@@ -35,7 +36,7 @@ export function Game({ frameActionsBag, activeWidth = 720, activeHeight = 1080, 
   function scroll() {
     this.scrollVelocity = config.scrollVelocity;
     frameActionsBag.add('slide', () => {
-      if (this.brick.y <= config.blockHeight) {
+      if (this.brick.y <= config.block.height) {
         this.scrollVelocity = 0;
         frameActionsBag.remove('slide');
       }
@@ -46,7 +47,7 @@ export function Game({ frameActionsBag, activeWidth = 720, activeHeight = 1080, 
   }
 
   function nextStep() {
-    while (this.blocks.slice(-1)[0].y < activeHeight) {
+    while (this.blocks.slice(-1)[0].y < config.canvas.activeHeight) {
       this.blocks.push(generateBlock.call(this));
     }
     while (this.blocks[0].y + this.blocks[0].height < this.brick.y) {
@@ -63,7 +64,7 @@ export function Game({ frameActionsBag, activeWidth = 720, activeHeight = 1080, 
       LocalStorage.setRecord(this.score);
     }
     this.record = Number(LocalStorage.getRecord());
-    eventPublisher.emitGameover();
+    EventPublisher.emitGameover();
   }
 
   function update(object, dt) {
@@ -76,9 +77,9 @@ export function Game({ frameActionsBag, activeWidth = 720, activeHeight = 1080, 
     let lastBlock = (this) ? this.blocks.slice(-1)[0] : blocks.slice(-1)[0];
     return Block(
       getRandomBlockPosition(lastBlock), 
-      (lastBlock ? lastBlock.y : 0) + config.newBlockStep, 
-      config.blockWidth, 
-      config.blockHeight
+      (lastBlock ? lastBlock.y : 0) + config.horizontalDistanceBetweenBlocks, 
+      config.block.width, 
+      config.block.height
     );
   }
 
@@ -107,15 +108,15 @@ export function Game({ frameActionsBag, activeWidth = 720, activeHeight = 1080, 
   }
 
   function getRandomBlockPosition(lastBlock) {
-    if (!lastBlock || lastBlock.width == activeWidth) {
-      return getRandomInt(0, activeWidth);
+    if (!lastBlock || lastBlock.width == config.canvas.activeWidth) {
+      return getRandomInt(0, config.canvas.activeWidth);
     }
     let validPositions = [];
-    if (lastBlock.x - config.blockWidth > 0) {
-      validPositions.push(getRandomInt(0, lastBlock.x - config.blockWidth));
+    if (lastBlock.x - config.block.width > 0) {
+      validPositions.push(getRandomInt(0, lastBlock.x - config.block.width));
     }
-    if (lastBlock.x + lastBlock.width < activeWidth) {
-      validPositions.push(getRandomInt(lastBlock.x + lastBlock.width, activeWidth));
+    if (lastBlock.x + lastBlock.width < config.canvas.activeWidth) {
+      validPositions.push(getRandomInt(lastBlock.x + lastBlock.width, config.canvas.activeWidth));
     }
     return validPositions[getRandomInt(0, validPositions.length)];
   }
@@ -128,8 +129,7 @@ export function Game({ frameActionsBag, activeWidth = 720, activeHeight = 1080, 
     jump, 
     brick, 
     blocks, 
-    canJump: true, 
-    activeWidth, 
+    canJump: true,
     score: 0, 
     currentBlock: undefined, 
     blockAbove: undefined,

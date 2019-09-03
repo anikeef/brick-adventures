@@ -1,3 +1,5 @@
+"use strict"
+
 import { Renderer } from './renderer';
 import { GameLoop } from './game-loop';
 import { Game } from './game';
@@ -10,8 +12,7 @@ EventPublisher.play$.subscribe(play)
 function play() {
   const frameActionsBag = FrameActionsBag();
   const game = Game({
-      frameActionsBag: frameActionsBag,
-      eventPublisher: EventPublisher
+    frameActionsBag: frameActionsBag
   });
   const renderer = Renderer(game);
   const gameLoop = GameLoop(renderer, frameActionsBag);

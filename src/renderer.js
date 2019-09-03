@@ -1,7 +1,6 @@
 import { fromEvent } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { config } from './config';
-import { EventPublisher } from './event-publisher';
 
 export function Renderer(game) {
   const container = document.querySelector('.gamebox');
@@ -72,7 +71,7 @@ export function Renderer(game) {
   }
 
   function getCenteredPosition(x) {
-    return x + (canvas.width - config.activeWidth) / 2;
+    return x + (canvas.width - config.canvas.activeWidth) / 2;
   }
 
   return { render, gameover, initialize };
