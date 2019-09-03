@@ -14,5 +14,5 @@ export let config = {
     activeHeight: 1080
   },
   horizontalDistanceBetweenBlocks: 250,
-  scrollVelocity: 500,
+  scrollVelocity: 600,
 };

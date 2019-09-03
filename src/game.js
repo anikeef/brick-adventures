@@ -34,10 +34,12 @@ export function Game({ frameActionsBag }) {
   }
 
   function scroll() {
+    this.canJump = false;
     this.scrollVelocity = config.scrollVelocity;
     frameActionsBag.add('slide', () => {
       if (this.brick.y <= config.block.height) {
         this.scrollVelocity = 0;
+        this.canJump = true;
         frameActionsBag.remove('slide');
       }
       [this.brick, ...this.blocks].forEach((block) => {
