@@ -40,6 +40,9 @@ export function Game({ frameActionsBag }) {
       if (this.brick.y <= config.block.height) {
         this.scrollVelocity = 0;
         this.canJump = true;
+        while (this.blocks[0].y + this.blocks[0].height < 0) {
+          this.blocks.shift();
+        }
         frameActionsBag.remove('slide');
       }
       [this.brick, ...this.blocks].forEach((block) => {
@@ -52,9 +55,8 @@ export function Game({ frameActionsBag }) {
     while (this.blocks.slice(-1)[0].y < config.canvas.activeHeight) {
       this.blocks.push(generateBlock.call(this));
     }
-    while (this.blocks[0].y + this.blocks[0].height < this.brick.y) {
+    for (let i = 0; this.blocks[i].y + this.blocks[i].height < this.brick.y; i++) {
       this.score++;
-      this.blocks.shift();
     }
     scroll.call(this);
   }
