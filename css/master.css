@@ -37,11 +37,13 @@ canvas {
   top: 0;
   left: 0;
   padding: 20px;
+  font-size: 1.5rem;
+  font-weight: normal;
 }
 
 /* Gameover */
 
-.gameover {
+.home {
   visibility: hidden;
   opacity: 0;
   position: absolute;
@@ -57,9 +59,23 @@ canvas {
   text-align: center;
 }
 
-.gameover-active {
+.home-active {
   visibility: visible;
   opacity: 1;
+}
+
+.home-message {
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.play-button {
+  margin-top: 30px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background-color: white;
+  cursor: pointer;
 }
 
 /* Footer */
