@@ -20,7 +20,7 @@ export function Renderer(game) {
       filter(() => game.canJump),
       map((event) => {
         return {
-          vx: (event.pageX - getCenteredPosition(game.brick.x)) * 3,
+          vx: (event.pageX - getCenteredPosition(game.brick.x + game.brick.width / 2)) * 3,
           vy: (containerHeight - event.pageY - game.brick.y) * 3
         }
       })
@@ -39,7 +39,7 @@ export function Renderer(game) {
     ctx.fillStyle = 'black';
     ctx.fillRect(getCenteredPosition(game.brick.x), game.brick.y, game.brick.width, game.brick.height);
 
-    ctx.fillStyle = '#D2D2D2';
+    ctx.fillStyle = '#777777';
     game.blocks.forEach((block) => {
       ctx.fillRect(getCenteredPosition(block.x), block.y, block.width, block.height);
     })
