@@ -65,7 +65,7 @@ export function Renderer(game) {
   }
 
   function gameover() {
-    home.message.element.textContent = 'Game over';
+    home.message.element.textContent = (game.score === game.record) ? 'New record!' : 'Game over';
     home.record.element.textContent = `Your record: ${game.record}`;
     home.score.element.textContent = `Current score: ${game.score}`;
     home.show();

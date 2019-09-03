@@ -62,7 +62,7 @@ export function Game({ frameActionsBag, activeWidth = 720, activeHeight = 1080, 
     if (!LocalStorage.getRecord() || LocalStorage.getRecord() < this.score) {
       LocalStorage.setRecord(this.score);
     }
-    this.record = LocalStorage.getRecord();
+    this.record = Number(LocalStorage.getRecord());
     eventPublisher.emitGameover();
   }
 
