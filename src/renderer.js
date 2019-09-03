@@ -20,15 +20,9 @@ export function Renderer(game) {
     hide: function() {
       this.element.classList.remove('home-active');
     },
-    score: {
-      element: document.querySelector('.home-score')
-    },
-    message: {
-      element: document.querySelector('.home-message')
-    },
-    record: {
-      element: document.querySelector('.home-record')
-    }
+    score: document.querySelector('.home-score'),
+    message: document.querySelector('.home-message'),
+    record: document.querySelector('.home-record')
   }
   const score = document.querySelector('.game-score');
 
@@ -64,9 +58,9 @@ export function Renderer(game) {
   }
 
   function gameover() {
-    home.message.element.textContent = (game.score === game.record) ? 'New record!' : 'Game over';
-    home.record.element.textContent = `Your record: ${game.record}`;
-    home.score.element.textContent = `Current score: ${game.score}`;
+    home.message.textContent = (game.score === game.record) ? 'New record!' : 'Game over';
+    home.record.textContent = `Your record: ${game.record}`;
+    home.score.textContent = `Current score: ${game.score}`;
     home.show();
   }
 

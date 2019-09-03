@@ -5,7 +5,7 @@ import { LocalStorage } from './local-storage';
 import { EventPublisher } from './event-publisher';
 
 export function Game({ frameActionsBag }) {
-  const brick = Brick(0, config.block.height, config.block.width, config.block.height);
+  const brick = Brick(0, config.block.height, config.brick.width, config.brick.height);
   const blocks = [Block(0, 0, config.canvas.activeWidth, config.block.height)];
   for (let i = 1; i * config.horizontalDistanceBetweenBlocks < config.canvas.activeHeight; i++) {
     blocks.push(generateBlock());
