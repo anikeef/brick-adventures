@@ -22,10 +22,13 @@ export function Renderer(game) {
       this.element.classList.remove('home-active');
     },
     score: {
-      element: document.querySelector('.home-score'),
+      element: document.querySelector('.home-score')
     },
     message: {
-      element: document.querySelector('.home-message'),
+      element: document.querySelector('.home-message')
+    },
+    record: {
+      element: document.querySelector('.home-record')
     }
   }
   const score = document.querySelector('.game-score');
@@ -63,6 +66,7 @@ export function Renderer(game) {
 
   function gameover() {
     home.message.element.textContent = 'Game over';
+    home.record.element.textContent = `Your record: ${game.record}`;
     home.score.element.textContent = `Current score: ${game.score}`;
     home.show();
   }

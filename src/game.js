@@ -1,6 +1,7 @@
 import { config } from './config'
 import { Block } from './block';
 import { Brick } from './brick';
+import { LocalStorage } from './local-storage';
 
 export function Game({ frameActionsBag, activeWidth = 720, activeHeight = 1080, eventPublisher }) {
   const brick = Brick(0, config.blockHeight, config.blockWidth, config.blockHeight);
@@ -58,6 +59,10 @@ export function Game({ frameActionsBag, activeWidth = 720, activeHeight = 1080, 
   function gameover() {
     frameActionsBag.clear();
     this.isOver = true;
+    if (!LocalStorage.getRecord() || LocalStorage.getRecord() < this.score) {
+      LocalStorage.setRecord(this.score);
+    }
+    this.record = LocalStorage.getRecord();
     eventPublisher.emitGameover();
   }
 
@@ -129,6 +134,7 @@ export function Game({ frameActionsBag, activeWidth = 720, activeHeight = 1080, 
     currentBlock: undefined, 
     blockAbove: undefined,
     scrollVelocity: 0,
-    isOver: false
+    isOver: false,
+    record: 0
   };
 }
