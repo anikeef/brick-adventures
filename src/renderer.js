@@ -47,7 +47,7 @@ export function Renderer(game) {
     ctx.fillStyle = 'black';
     ctx.fillRect(getCenteredPosition(game.brick.x), game.brick.y, game.brick.width, game.brick.height);
 
-    ctx.fillStyle = '#777777';
+    ctx.fillStyle = '#BDBDBD';
     game.blocks.forEach((block) => {
       ctx.fillRect(getCenteredPosition(block.x), block.y, block.width, block.height);
     })
