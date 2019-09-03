@@ -37,7 +37,7 @@ export function Game({ frameActionsBag }) {
     this.canJump = false;
     this.scrollVelocity = config.scrollVelocity;
     frameActionsBag.add('slide', () => {
-      if (this.brick.y <= config.block.height) {
+      if (this.brick.y <= config.block.height * 1.5) {
         this.scrollVelocity = 0;
         this.canJump = true;
         while (this.blocks[0].y + this.blocks[0].height < 0) {
