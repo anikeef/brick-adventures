@@ -76,6 +76,12 @@ canvas {
   border: none;
   background-color: white;
   cursor: pointer;
+  outline: none;
+  transition: transform .2s;
+}
+
+.play-button:hover {
+  transform: scale(1.2);
 }
 
 /* Footer */
