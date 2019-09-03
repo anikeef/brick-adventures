@@ -54,6 +54,7 @@ canvas {
   justify-content: space-around;
   background-color: white;
   transition: opacity 1s;
+  text-align: center;
 }
 
 .gameover-active {
